@@ -7,6 +7,7 @@ class FrequentVisitors(MRJob):
 
     def get_name(self, line):
     	fields = line.split(',')
+        ## Ignore header
     	if fields[0] == "NAMELAST":
             return None
         name = " ".join(filter(lambda x: x != "", [fields[1], fields[2], fields[0]]))

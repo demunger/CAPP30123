@@ -6,12 +6,12 @@ class FrequentVisitors(MRJob):
     OUTPUT_PROTOCOL = protocol.TextValueProtocol
 
     def get_name(self, line):
-    	fields = line.split(',')
+        fields = line.split(',')
         ## Ignore header
-    	if fields[0] == "NAMELAST":
+        if fields[0] == "NAMELAST":
             return None
         name = " ".join(filter(lambda x: x != "", [fields[1], fields[2], fields[0]]))
-    	return name.title()
+        return name.title()
 
     def mapper(self, _, line):
         name = self.get_name(line)

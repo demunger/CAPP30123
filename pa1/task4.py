@@ -6,24 +6,33 @@ class VisitorVisitee(MRJob):
     OUTPUT_PROTOCOL = protocol.TextValueProtocol
 
     def get_name(self, line):
-    	fields = line.split(',')
+        fields = line.split(',')
         ## Ignore header
-    	if fields[0] == "NAMELAST":
+        if fields[0] == "NAMELAST":
             return None
-        name = " ".join(filter(lambda x: x != "", [fields[1], fields[2], fields[0]]))
-    	return name.title()
+        visitor = " ".join([fields[1], fields[0]]).title()
+
+        ## Ignore single-name anomalies
+        if fields[19] == "" or fields[20] == "":
+            return None
+        ## Ignore Visitor's Office anomaly
+        if fields[19].lower() == "office" and fields[20].lower().strip() == "visitors":
+            return None
+        visitee = " ".join([fields[20], fields[19]]).title()
+
+        return visitor, visitee
+
 
     def mapper(self, _, line):
-        name = self.get_name(line)
-        if name != None:
-            yield name, 1
-
-    def combiner(self, name, counts):
-        yield name, sum(counts)
+        visitor, visitee = self.get_name(line)
+        if None not in [visitor, visitee]:
+            print("{} - {}".format(visitor, visitee))
+            yield visitor, "visitor"
+            yield visitee, "visitee"
 
     def reducer(self, name, counts):
-        visits = sum(counts)
-        if visits >= 10:
+        visitees = list(counts)
+        if name in visitees:
             yield None, name ##name, counts for testing
 '''
     def final_reducer(self, _, counts):

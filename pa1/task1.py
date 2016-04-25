@@ -1,5 +1,4 @@
 from mrjob.job import MRJob
-from mrjob.step import MRStep
 from mrjob import protocol
 
 class FrequentVisitors(MRJob):
@@ -24,22 +23,7 @@ class FrequentVisitors(MRJob):
     def reducer(self, name, counts):
         visits = sum(counts)
         if visits >= 10:
-            yield None, name ##name, counts for testing
-'''
-    def final_reducer(self, _, counts):
-        yield None, sum(counts)
+            yield None, name
 
-    def final_mapper(self, _, entry):
-        yield None, 1
-
-    def steps(self):
-        return [
-            MRStep(mapper=self.mapper,
-                   combiner=self.combiner,
-                   reducer=self.reducer),
-            MRStep(mapper=self.final_mapper,
-                   reducer=self.final_reducer)
-        ]
-'''
 if __name__ == "__main__":
     FrequentVisitors.run()

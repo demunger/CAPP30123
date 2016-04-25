@@ -11,12 +11,12 @@ def get_dict():
 
 	for row in reader:
 		if row[0] != "NAMELAST":
-			name = " ".join(filter(lambda x: x != "", [row[1], row[0]])).title()
+			name = " ".join([row[1], row[0]]).title()
 			name_dict[name] = name_dict.get(name, 0) + 1
 
 			count += 1
 
-	return name_dict, count
+	return name_dict
 
 def visit_ten_times(name_dict):
 	log = []
@@ -38,7 +38,7 @@ def get_visit_dict():
         if row[19] == "" or row[20] == "":
             continue
         ## Ignore Visitor's Office anomaly
-        if row[19].lower().strip() == "office" and row[20].strip() == "visitors":
+        if row[19].lower().strip() == "office" and row[20].lower().strip() == "visitors":
             continue
 
         name = " ".join([row[20], row[19]]).title()

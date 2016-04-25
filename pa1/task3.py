@@ -28,6 +28,11 @@ class TwoYearVisitors(MRJob):
         if name != None:
             yield name, year
 
+    def combiner(self, name, years):
+        visits = list(years)
+        for year in set(visits):
+            yield name, year
+
     def reducer(self, name, years):
         visits = list(years)
         if len(set(visits)) > 1:
